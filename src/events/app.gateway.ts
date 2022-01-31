@@ -8,6 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
+import { GameFactoryService } from '../games/game-factory/game-factory.service';
 
 @WebSocketGateway()
 export class AppGateway
@@ -18,9 +19,12 @@ export class AppGateway
 
   private logger: Logger = new Logger('AppGateway');
 
+  constructor(private gameFactory: GameFactoryService) {}
   @SubscribeMessage('newGame')
   handleMessage(client: Socket, payload: string): void {
     this.logger.log('porfaaaaaaaa');
+    const game = this.gameFactory.getGame('chess');
+    game.newGame();
     // this.server.emit('msgToClient', payload);
   }
 
