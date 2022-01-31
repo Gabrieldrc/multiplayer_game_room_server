@@ -11,7 +11,7 @@ import { Logger } from '@nestjs/common';
 import { GameFactoryService } from '../games/game-factory/game-factory.service';
 
 @WebSocketGateway()
-export class AppGateway
+export class ChessGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   @WebSocketServer()

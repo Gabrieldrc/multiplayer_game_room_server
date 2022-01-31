@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppGateway } from './app.gateway';
+import { ChessGateway } from './chess.gateway';
 import { GamesModule } from '../games/games.module';
 
 @Module({
-  providers: [AppGateway],
+  providers: [ChessGateway],
   imports: [GamesModule],
 })
 export class EventsModule {}
