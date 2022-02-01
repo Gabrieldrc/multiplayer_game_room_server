@@ -5,7 +5,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: {
-      origin: ['https://hoppscotch.io', ' http://localhost:3000'],
+      origin: ['*'],
     },
   });
   await app.listen(3001);
