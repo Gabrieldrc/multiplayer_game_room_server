@@ -1,5 +1,5 @@
-import { PieceFactoryService } from './piece-factory/piece-factory.service';
-import ChessPieceAbstract from './chess-piece-abstract';
+import { PieceFactoryService } from './factories/piece-factory/piece-factory.service';
+import ChessPieceAbstract from './classes/chess-piece-abstract';
 
 export default class Chess {
   private pieceFactory: PieceFactoryService;
@@ -87,6 +87,20 @@ export default class Chess {
       data.push([]);
       for (let j = 0; j < this.getBoard()[i].length; j++) {
         data[i].push(this.getBoard()[i][j].getData(this.getBoard()));
+      }
+    }
+    return {
+      turn: this.turn,
+      board: data,
+    };
+  }
+
+  getState() {
+    const data: any[] = [];
+    for (let i = 0; i < this.getBoard().length; i++) {
+      data.push([]);
+      for (let j = 0; j < this.getBoard()[i].length; j++) {
+        data[i].push(this.getBoard()[i][j].getModel());
       }
     }
     return {

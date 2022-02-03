@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PieceFactoryService } from './piece-factory/piece-factory.service';
+import { PieceFactoryService } from './factories/piece-factory/piece-factory.service';
 
 @Module({
   providers: [PieceFactoryService],

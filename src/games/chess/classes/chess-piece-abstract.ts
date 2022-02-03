@@ -1,4 +1,5 @@
-import { Position2D } from '../../interfaces/position2-d.interface';
+import { Position2D } from '../../../interfaces/position2-d.interface';
+import { PieceModel } from '../interfaces/PieceModel';
 
 export default abstract class ChessPieceAbstract {
   private player: number;
@@ -99,6 +100,13 @@ export default abstract class ChessPieceAbstract {
       player: this.player,
       position: { i: this.x, j: this.y },
       placeCanMove: this.getPlaceWhereCanMove(board),
+    };
+  }
+  getModel(): PieceModel {
+    return {
+      name: this.name,
+      player: this.player,
+      position: { i: this.x, j: this.y },
     };
   }
 }
