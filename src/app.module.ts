@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { EventsModule } from './events/events.module';
 import { GamesModule } from './games/games.module';
 import { UtilsModule } from './utils/utils.module';
-import { CoreModule } from './core/core.module';
+import { ApiModule } from './api/api.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
@@ -13,7 +13,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     EventsModule,
     GamesModule,
     UtilsModule,
-    CoreModule,
+    ApiModule,
   ],
   controllers: [],
   providers: [],

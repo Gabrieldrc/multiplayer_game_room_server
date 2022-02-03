@@ -6,7 +6,7 @@ export type ChessGameStateDocument = ChessGameState & Document;
 
 @Schema()
 export class ChessGameState {
-  @Prop({ require: true })
+  @Prop({ require: true, unique: true })
   roomId: string;
 
   @Prop({ require: true })

@@ -8,11 +8,11 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Logger } from '@nestjs/common';
 import { GameFactoryService } from '../games/services/game-factory/game-factory.service';
 import { RoomService } from '../utils/room/room.service';
 import { ChessGamesStateService } from '../games/services/games-state/chess-games-state.service';
-import IResponse from '../core/IResponse';
+import IResponse from '../api/IResponse';
+import { Logger } from '@nestjs/common';
 
 @WebSocketGateway()
 export class ChessGateway
@@ -34,12 +34,12 @@ export class ChessGateway
     const response = new IResponse();
     const roomName = '1';
     this.roomService.setRoom(client.id, roomName);
-    // client.emit('gameCode', roomName);
+    client.emit('gameCode', roomName);
     const game = this.gameFactory.getGame('chess');
     game.newGame();
     try {
       client.join(roomName);
-      this.gameStateService.setGameState(roomName, game.getState());
+      this.gameStateService.createGameState(roomName, game.getState());
     } catch (error) {
       this.logger.error(error);
       response.setOk(false).setData({ error: error });
