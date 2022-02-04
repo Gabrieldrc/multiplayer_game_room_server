@@ -24,7 +24,10 @@ export class ChessController {
           board: game.getBoardData(),
         });
       }
-    } catch (error) {
+    } catch (error: any) {
+      this.logger.error(error.stack);
+      resData.setData(error).setStatus(404);
+      return res.status(resData.getStatus()).json(resData).send();
     }
     res.status(200).json(resData).send();
   }

@@ -1,9 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Document } from 'mongoose';
 import Chess from 'src/games/chess/chess';
 import { PieceFactoryService } from 'src/games/chess/factories/piece-factory/piece-factory.service';
 import { PieceModel } from 'src/games/chess/interfaces/PieceModel';
-import { ChessGameState } from 'src/games/chess/schemas/chess-game-state.schema';
+import NotFoundStateException from 'src/games/exceptions/NotFoundStateException';
 import { ChessGamesStateRepository } from 'src/games/repositories/chess-games-state-repository/chess-games-state-repository.service';
 
 @Injectable()
@@ -29,7 +28,7 @@ export class ChessGamesStateService {
   async getGame(room: string): Promise<Chess> {
     const document = await this.chessStateRepository.findGameState(room);
     if (!document) {
-      return null;
+      throw new NotFoundStateException();
     }
 
     return this.gameStateToGameObject(document);
