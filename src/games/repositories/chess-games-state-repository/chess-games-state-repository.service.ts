@@ -2,21 +2,19 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ChessGameState } from 'src/games/chess/schemas/chess-game-state.schema';
-import GameStateService from 'src/games/interfaces/GameStateService';
+import GameStateRepository from 'src/games/interfaces/GameStateRepository';
 
 @Injectable()
-export class ChessGamesStateService implements GameStateService {
-  private logger: Logger = new Logger('ChessGamesStateService');
+export class ChessGamesStateRepository implements GameStateRepository {
+  private logger: Logger = new Logger('ChessGamesStateRepository');
+
   constructor(
     @InjectModel(ChessGameState.name)
     private chessGameStateModel: Model<ChessGameState>,
   ) {}
 
-  async createGameState(room: string, game: any): Promise<ChessGameState> {
-    const createdChessGameState = new this.chessGameStateModel({
-      roomId: room,
-      ...game,
-    });
+  async createGameState(stateObj: any) {
+    const createdChessGameState = new this.chessGameStateModel(stateObj);
     try {
       const result = await createdChessGameState.save();
       return result;
@@ -27,7 +25,13 @@ export class ChessGamesStateService implements GameStateService {
   }
 
   async findGameState(room: string) {
-    return await this.chessGameStateModel.findOne({ roomId: room });
+    try {
+      const document = await this.chessGameStateModel.findOne({ roomId: room });
+      return document
+    } catch(error: any) {
+      this.logger.error(error);
+      return null;
+    }
   }
 
   async updateGameState(gameState: ChessGameState) {

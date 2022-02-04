@@ -1,6 +1,6 @@
-import Response from '../interfaces/Response';
+import WSResponse from '../interfaces/WSResponse';
 
-export default class IResponse implements Response {
+export default class IWSResponse implements WSResponse {
   private data: object;
   private ok: boolean;
 

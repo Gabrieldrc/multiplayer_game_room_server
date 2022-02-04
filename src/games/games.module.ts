@@ -6,7 +6,8 @@ import {
   ChessGameStateSchema,
 } from './chess/schemas/chess-game-state.schema';
 import { GameFactoryService } from './services/game-factory/game-factory.service';
-import { ChessGamesStateService } from './services/games-state/chess-games-state.service';
+import { ChessGamesStateRepository } from './repositories/chess-games-state-repository/chess-games-state-repository.service';
+import { ChessGamesStateService } from './services/chess-games-state/chess-games-state.service';
 
 @Module({
   imports: [
@@ -15,7 +16,15 @@ import { ChessGamesStateService } from './services/games-state/chess-games-state
       { name: ChessGameState.name, schema: ChessGameStateSchema },
     ]),
   ],
-  providers: [GameFactoryService, ChessGamesStateService],
-  exports: [GameFactoryService, ChessGamesStateService],
+  providers: [
+    GameFactoryService,
+    ChessGamesStateRepository,
+    ChessGamesStateService,
+  ],
+  exports: [
+    GameFactoryService,
+    ChessGamesStateRepository,
+    ChessGamesStateService,
+  ],
 })
 export class GamesModule {}

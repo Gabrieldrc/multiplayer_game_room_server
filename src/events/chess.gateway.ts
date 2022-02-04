@@ -10,9 +10,9 @@ import {
 import { Server, Socket } from 'socket.io';
 import { GameFactoryService } from '../games/services/game-factory/game-factory.service';
 import { RoomService } from '../utils/room/room.service';
-import { ChessGamesStateService } from '../games/services/games-state/chess-games-state.service';
-import IResponse from '../api/IResponse';
+import IResponse from './classes/IWSResponse';
 import { Logger } from '@nestjs/common';
+import { ChessGamesStateService } from 'src/games/services/chess-games-state/chess-games-state.service';
 
 @WebSocketGateway()
 export class ChessGateway
@@ -39,7 +39,7 @@ export class ChessGateway
     game.newGame();
     try {
       client.join(roomName);
-      this.gameStateService.createGameState(roomName, game.getState());
+      this.gameStateService.createGameState(roomName, game);
     } catch (error) {
       this.logger.error(error);
       response.setOk(false).setData({ error: error });
