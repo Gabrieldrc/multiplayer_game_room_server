@@ -15,6 +15,7 @@ export class PieceFactoryService {
     x: number = -1,
     y: number = -1,
   ) {
+    name = name.toUpperCase();
     switch (name) {
       case 'ROOK':
         return new Rook(player, x, y);

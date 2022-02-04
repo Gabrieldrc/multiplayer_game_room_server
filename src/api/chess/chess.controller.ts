@@ -10,24 +10,22 @@ export class ChessController {
   constructor(private chessStateService: ChessGamesStateService) {}
 
   @Get('state')
-  getState(@Query() query: any, @Res() res: Response) {
+  async getState(@Query() query: any, @Res() res: Response) {
+
     const resData = new IResponseData();
+    resData.setEntry(query);
     const { room } = query;
     try {
-      const game = this.chessStateService.getGame(room);
+      const game = await this.chessStateService.getGame(room);
       if (game) {
+        this.logger.debug(game.getBoardData());
         resData.setStatus(200).setData({
           turn: game.getTurn(),
           board: game.getBoardData(),
         });
       }
     } catch (error) {
-      res
-        .status(400)
-        .json({ entry: query, response: { status: 400, error: error } })
-        .send();
     }
-
     res.status(200).json(resData).send();
   }
 }
