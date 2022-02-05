@@ -19,10 +19,7 @@ export class ChessController {
       const game = await this.chessStateService.getGame(room);
       if (game) {
         this.logger.debug(game.getBoardData());
-        resData.setStatus(200).setData({
-          turn: game.getTurn(),
-          board: game.getBoardData(),
-        });
+        resData.setStatus(200).setData(game.getBoardData());
       }
     } catch (error: any) {
       this.logger.error(error.stack);
