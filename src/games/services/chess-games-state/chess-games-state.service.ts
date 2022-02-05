@@ -14,8 +14,8 @@ export class ChessGamesStateService {
     private pieceFactory: PieceFactoryService,
   ) {}
 
-  createGameState(room: string, game: Chess) {
-    const state = this.chessStateRepository.createGameState({
+  async setGameState(room: string, game: Chess) {
+    const state = await this.chessStateRepository.setGameState({
       roomId: room,
       ...game.getState(),
     });
@@ -60,17 +60,6 @@ export class ChessGamesStateService {
     });
 
     return boardObject;
-  }
-
-  updateGameState(room: string, game: Chess) {
-    const state = this.chessStateRepository.updateGameState({
-      roomId: room,
-      ...game.getState(),
-    });
-    if (state) {
-      return true;
-    }
-    return false;
   }
 
   deleteGameState(room: string) {

@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Document, Model } from 'mongoose';
 import { ChessGameState } from 'src/games/chess/schemas/chess-game-state.schema';
+import MongoServerError from 'src/games/exceptions/MongoServerError';
 import GameStateRepository from 'src/games/interfaces/GameStateRepository';
 
 @Injectable()
@@ -13,35 +14,48 @@ export class ChessGamesStateRepository implements GameStateRepository {
     private chessGameStateModel: Model<ChessGameState>,
   ) {}
 
-  createGameState(stateObj: any): Document<ChessGameState> | null {
-    const createdChessGameState = new this.chessGameStateModel(stateObj);
-    let result;
-    createdChessGameState
-      .save()
-      .then((document) => (result = document))
-      .catch((error) => {
-        this.logger.error(error);
-        result = null;
-      });
-    return result;
+  async setGameState(stateObj: ChessGameState) {
+    let document = await this.findGameState(stateObj.roomId);
+    if (!document) {
+      document = await this.createGameState(stateObj);
+      return document;
+    }
+    document = await this.updateGameState(stateObj, document);
+    return document;
   }
 
-  async findGameState(room: string): Promise<Document<ChessGameState, any, any>> {
+  private async createGameState(stateObj: ChessGameState) {
+    const createdChessGameState = new this.chessGameStateModel(stateObj);
+    let document;
+    try {
+      document = await createdChessGameState.save();
+    } catch (error) {
+      throw new MongoServerError(error.message);
+    }
+
+    return document;
+  }
+
+  async findGameState(room: string) {
     let result = null;
     try {
       result = await this.chessGameStateModel.findOne({ roomId: room });
     } catch (error) {
-      this.logger.error(error);
+      throw new MongoServerError(error.message);
     }
 
     return result;
   }
 
-  async updateGameState(gameState: ChessGameState) {
-    // const model = await this.findGameState(gameState.roomId);
-    // model.board = gameState.board;
-    // model.turn = gameState.turn;
-    // model.update();
+  private async updateGameState(stateObj: ChessGameState, document: any) {
+    document.board = stateObj.board;
+    document.turn = stateObj.turn;
+    try {
+      document = await document.updateOne();
+    } catch (error) {
+      throw new MongoServerError(error.message);
+    }
+    return document;
   }
 
   async deleteGameState(room: string) {

@@ -1,8 +1,8 @@
 import WSResponse from '../interfaces/WSResponse';
 
 export default class IWSResponse implements WSResponse {
-  private data: object;
-  private ok: boolean;
+  ok: boolean;
+  data: object;
 
   getData(): object {
     return this.data;
@@ -20,12 +20,5 @@ export default class IWSResponse implements WSResponse {
   setOk(value: boolean) {
     this.ok = value;
     return this;
-  }
-
-  toJson() {
-    return {
-      ok: this.getOk(),
-      data: this.getData(),
-    };
   }
 }

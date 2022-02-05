@@ -10,7 +10,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { GameFactoryService } from '../games/services/game-factory/game-factory.service';
 import { RoomService } from '../utils/room/room.service';
-import IResponse from './classes/IWSResponse';
+import IWSResponse from './classes/IWSResponse';
 import { Logger } from '@nestjs/common';
 import { ChessGamesStateService } from 'src/games/services/chess-games-state/chess-games-state.service';
 
@@ -30,27 +30,29 @@ export class ChessGateway
   ) {}
 
   @SubscribeMessage('newGame')
-  handleMessage(client: Socket): WsResponse<any> {
-    const response = new IResponse();
+  async handleMessage(client: Socket): Promise<WsResponse<any>> {
+    const response = new IWSResponse();
     const roomName = '1';
+
     this.roomService.setRoom(client.id, roomName);
-    client.emit('gameCode', roomName);
+
     const game = this.gameFactory.getGame('chess');
     game.newGame();
+
     try {
       client.join(roomName);
-      this.gameStateService.createGameState(roomName, game);
+      this.gameStateService.setGameState(roomName, game);
     } catch (error) {
       this.logger.error(error);
       response.setOk(false).setData({ error: error });
-      return { event: 'error', data: response.toJson() };
+      return { event: 'error', data: response };
     }
     // client.number = 1
     const data = {
       room: roomName,
     };
     response.setOk(true).setData(data);
-    return { event: 'newGame', data: response.toJson() };
+    return { event: 'newGame', data: response };
   }
 
   afterInit(server: Server) {
