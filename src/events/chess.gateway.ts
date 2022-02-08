@@ -13,6 +13,7 @@ import { RoomService } from '../utils/room/room.service';
 import IWSResponse from './classes/IWSResponse';
 import { Logger } from '@nestjs/common';
 import { ChessGamesStateService } from 'src/games/services/chess-games-state/chess-games-state.service';
+import ItDidNotMoveException from 'src/games/exceptions/ItDidNotMoveException';
 
 @WebSocketGateway()
 export class ChessGateway
@@ -30,7 +31,7 @@ export class ChessGateway
   ) {}
 
   @SubscribeMessage('newGame')
-  async handleMessage(client: Socket): Promise<WsResponse<any>> {
+  async handleNewGame(client: Socket): Promise<WsResponse<any>> {
     const response = new IWSResponse();
     const roomName = '1';
 
@@ -53,6 +54,34 @@ export class ChessGateway
     };
     response.setOk(true).setData(data);
     return { event: 'newGame', data: response };
+  }
+
+  @SubscribeMessage('play')
+  async handlePlay(client: Socket, data: any) /*: Promise<WsResponse<any>>*/ {
+    const { from, to } = data;
+    this.logger.debug('FUNCIONA PLAY');
+    const response = new IWSResponse();
+
+    const room = this.roomService.getRoom(client.id);
+
+    const game = await this.gameStateService.getGame(room);
+
+    try {
+      const itMoved = game.move(from.i, from.j, to.i, to.j);
+      if (!itMoved) {
+        throw new ItDidNotMoveException();
+      }
+
+      await this.gameStateService.setGameState(room, game);
+
+    } catch (error) {
+      this.logger.error('Error', error.message);
+      response.setOk(false).setData({ error: error });
+      return { event: 'error', data: response };
+    }
+
+    response.setOk(true).setData({ ...game.getBoardData() });
+    this.server.in(room).emit('gameStateUpdate', response);
   }
 
   afterInit(server: Server) {

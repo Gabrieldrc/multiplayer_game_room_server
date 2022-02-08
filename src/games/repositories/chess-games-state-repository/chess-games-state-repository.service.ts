@@ -51,7 +51,7 @@ export class ChessGamesStateRepository implements GameStateRepository {
     document.board = stateObj.board;
     document.turn = stateObj.turn;
     try {
-      document = await document.updateOne();
+      document = await document.save();
     } catch (error) {
       throw new MongoServerError(error.message);
     }
