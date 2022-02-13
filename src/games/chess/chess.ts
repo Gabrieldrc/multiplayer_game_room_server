@@ -5,11 +5,13 @@ export default class Chess {
   private pieceFactory: PieceFactoryService;
   private turn: number;
   private board: ChessPieceAbstract[][];
+  private players: string[];
 
   constructor(pieceFactory: PieceFactoryService) {
     this.turn = Math.floor(Math.random() * 2 + 1);
     this.board = [];
     this.pieceFactory = pieceFactory;
+    this.players = [];
   }
 
   newGame() {
@@ -104,8 +106,9 @@ export default class Chess {
       }
     }
     return {
-      turn: this.turn,
+      turn: this.getTurn(),
       board: data,
+      players: this.getPlayers(),
     };
   }
 
@@ -147,5 +150,32 @@ export default class Chess {
 
   setPieceFactory(value: PieceFactoryService) {
     this.pieceFactory = value;
+  }
+
+  setPlayers(players: string[]) {
+    if (players.length <= 2) {
+      this.players = players;
+
+      return true;
+    }
+
+    return false;
+  }
+
+  getPlayers(): string[] {
+    return this.players;
+  }
+
+  addPlayer(player: string) {
+    if (
+      this.getPlayers().length < 2 &&
+      this.getPlayers().indexOf(player) == -1
+    ) {
+      this.setPlayers([...this.getPlayers(), player]);
+
+      return true;
+    }
+
+    return false;
   }
 }

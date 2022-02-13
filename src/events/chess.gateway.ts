@@ -39,6 +39,7 @@ export class ChessGateway
 
     const game = this.gameFactory.getGame('chess');
     game.newGame();
+    game.addPlayer(client.id);
 
     try {
       client.join(roomName);
@@ -48,9 +49,11 @@ export class ChessGateway
       response.setOk(false).setData({ error: error });
       return { event: 'error', data: response };
     }
-    // client.number = 1
+
     const data = {
       room: roomName,
+      playerNumber: 1,
+      playerId: client.id,
     };
     response.setOk(true).setData(data);
     return { event: 'newGame', data: response };

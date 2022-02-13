@@ -50,6 +50,7 @@ export class ChessGamesStateRepository implements GameStateRepository {
   private async updateGameState(stateObj: ChessGameState, document: any) {
     document.board = stateObj.board;
     document.turn = stateObj.turn;
+    document.players = stateObj.players;
     try {
       document = await document.save();
     } catch (error) {
