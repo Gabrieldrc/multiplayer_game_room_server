@@ -67,16 +67,16 @@ export class ChessGateway
 
     const room = this.roomService.getRoom(client.id);
 
-    const game = await this.gameStateService.getGame(room);
-
+    let game;
     try {
+      game = await this.gameStateService.getGame(room);
+
       const itMoved = game.move(from.i, from.j, to.i, to.j);
       if (!itMoved) {
         throw new ItDidNotMoveException();
       }
 
       await this.gameStateService.setGameState(room, game);
-
     } catch (error) {
       this.logger.error('Error', error.message);
       response.setOk(false).setData({ error: error });
@@ -85,6 +85,40 @@ export class ChessGateway
 
     response.setOk(true).setData({ ...game.getBoardData() });
     this.server.in(room).emit('gameStateUpdate', response);
+  }
+
+  @SubscribeMessage('joinGame')
+  async handleJoinGame(
+    client: Socket,
+    data: any,
+  ) /*: Promise<WsResponse<any>>*/ {
+    const response = new IWSResponse();
+    const room: string = data.room;
+
+    const res = this.server.of('/').adapter.rooms;
+    console.log('rooms', res);
+    // this.roomService.setRoom(client.id, room);
+
+    // try {
+    //   const game = await this.gameStateService.getGame(room);
+
+    //   game.addPlayer(client.id);
+
+    //   client.join(room);
+    //   this.gameStateService.setGameState(room, game);
+    // } catch (error) {
+    //   this.logger.error(error);
+    //   response.setOk(false).setData({ error: error });
+    //   return { event: 'error', data: response };
+    // }
+
+    // const data = {
+    //   room: room,
+    //   playerNumber: 2,
+    //   playerId: client.id,
+    // };
+    // response.setOk(true).setData(data);
+    // return { event: 'newGame', data: response };
   }
 
   afterInit(server: Server) {
