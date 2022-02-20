@@ -1,7 +1,9 @@
 import { PieceFactoryService } from './factories/piece-factory/piece-factory.service';
 import ChessPieceAbstract from './classes/chess-piece-abstract';
+import { Logger } from '@nestjs/common';
 
 export default class Chess {
+  private logger: Logger = new Logger();
   private pieceFactory: PieceFactoryService;
   private turn: number;
   private board: ChessPieceAbstract[][];
@@ -155,6 +157,7 @@ export default class Chess {
   setPlayers(players: string[]) {
     if (players.length <= 2) {
       this.players = players;
+      this.logger.debug(players);
 
       return true;
     }
@@ -171,7 +174,7 @@ export default class Chess {
       this.getPlayers().length < 2 &&
       this.getPlayers().indexOf(player) == -1
     ) {
-      this.setPlayers([...this.getPlayers(), player]);
+      this.players.push(player);
 
       return true;
     }

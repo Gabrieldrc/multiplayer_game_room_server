@@ -39,6 +39,7 @@ export class ChessGamesStateService {
 
     gameObject.setBoard(this.boardStateToBoardObject(gameState.board));
     gameObject.setTurn(gameState.turn);
+    gameObject.setPlayers(gameState.players);
 
     return gameObject;
   }

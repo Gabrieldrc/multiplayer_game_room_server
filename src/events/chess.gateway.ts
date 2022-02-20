@@ -62,7 +62,6 @@ export class ChessGateway
   @SubscribeMessage('play')
   async handlePlay(client: Socket, data: any) /*: Promise<WsResponse<any>>*/ {
     const { from, to } = data;
-    this.logger.debug('FUNCIONA PLAY');
     const response = new IWSResponse();
 
     const room = this.roomService.getRoom(client.id);
@@ -90,35 +89,33 @@ export class ChessGateway
   @SubscribeMessage('joinGame')
   async handleJoinGame(
     client: Socket,
-    data: any,
+    room: string,
   ) /*: Promise<WsResponse<any>>*/ {
     const response = new IWSResponse();
-    const room: string = data.room;
+    const data = {};
 
-    const res = this.server.of('/').adapter.rooms;
-    console.log('rooms', res);
-    // this.roomService.setRoom(client.id, room);
+    this.roomService.setRoom(client.id, room);
 
-    // try {
-    //   const game = await this.gameStateService.getGame(room);
+    try {
+      const game = await this.gameStateService.getGame(room);
 
-    //   game.addPlayer(client.id);
+      if (game.addPlayer(client.id)) {
+        data['playerNumber'] = game.getPlayers().indexOf(client.id) + 1;
+      }
 
-    //   client.join(room);
-    //   this.gameStateService.setGameState(room, game);
-    // } catch (error) {
-    //   this.logger.error(error);
-    //   response.setOk(false).setData({ error: error });
-    //   return { event: 'error', data: response };
-    // }
+      client.join(room);
+      this.gameStateService.setGameState(room, game);
+    } catch (error) {
+      this.logger.error(error);
+      response.setOk(false).setData({ error: error });
+      return { event: 'error', data: response };
+    }
 
-    // const data = {
-    //   room: room,
-    //   playerNumber: 2,
-    //   playerId: client.id,
-    // };
-    // response.setOk(true).setData(data);
-    // return { event: 'newGame', data: response };
+    data['room'] = room;
+    data['playerId'] = client.id;
+
+    response.setOk(true).setData(data);
+    return { event: 'newGame', data: response };
   }
 
   afterInit(server: Server) {
