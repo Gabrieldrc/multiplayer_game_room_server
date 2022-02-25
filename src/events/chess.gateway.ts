@@ -8,12 +8,12 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { GameFactoryService } from '../games/services/game-factory/game-factory.service';
-import { RoomService } from '../utils/room/room.service';
-import IWSResponse from './classes/IWSResponse';
+import { GameFactoryService } from '@games/services/game-factory/game-factory.service';
+import { RoomService } from '@utils/room/room.service';
+import IWSResponse from '@events/classes/IWSResponse';
 import { Logger } from '@nestjs/common';
-import { ChessGamesStateService } from 'src/games/services/chess-games-state/chess-games-state.service';
-import ItDidNotMoveException from 'src/games/exceptions/ItDidNotMoveException';
+import { ChessGamesStateService } from '@games/services/chess-games-state/chess-games-state.service';
+import ItDidNotMoveException from '@games/exceptions/ItDidNotMoveException';
 
 @WebSocketGateway()
 export class ChessGateway
@@ -62,7 +62,6 @@ export class ChessGateway
   @SubscribeMessage('play')
   async handlePlay(client: Socket, data: any) /*: Promise<WsResponse<any>>*/ {
     const { from, to } = data;
-    this.logger.debug('FUNCIONA PLAY');
     const response = new IWSResponse();
 
     const room = this.roomService.getRoom(client.id);
@@ -90,35 +89,33 @@ export class ChessGateway
   @SubscribeMessage('joinGame')
   async handleJoinGame(
     client: Socket,
-    data: any,
+    room: string,
   ) /*: Promise<WsResponse<any>>*/ {
     const response = new IWSResponse();
-    const room: string = data.room;
+    const data = {};
 
-    const res = this.server.of('/').adapter.rooms;
-    console.log('rooms', res);
-    // this.roomService.setRoom(client.id, room);
+    this.roomService.setRoom(client.id, room);
 
-    // try {
-    //   const game = await this.gameStateService.getGame(room);
+    try {
+      const game = await this.gameStateService.getGame(room);
 
-    //   game.addPlayer(client.id);
+      if (game.addPlayer(client.id)) {
+        data['playerNumber'] = game.getPlayers().indexOf(client.id) + 1;
+      }
 
-    //   client.join(room);
-    //   this.gameStateService.setGameState(room, game);
-    // } catch (error) {
-    //   this.logger.error(error);
-    //   response.setOk(false).setData({ error: error });
-    //   return { event: 'error', data: response };
-    // }
+      client.join(room);
+      this.gameStateService.setGameState(room, game);
+    } catch (error) {
+      this.logger.error(error);
+      response.setOk(false).setData({ error: error });
+      return { event: 'error', data: response };
+    }
 
-    // const data = {
-    //   room: room,
-    //   playerNumber: 2,
-    //   playerId: client.id,
-    // };
-    // response.setOk(true).setData(data);
-    // return { event: 'newGame', data: response };
+    data['room'] = room;
+    data['playerId'] = client.id;
+
+    response.setOk(true).setData(data);
+    return { event: 'newGame', data: response };
   }
 
   afterInit(server: Server) {

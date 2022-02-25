@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ChessModule } from './chess/chess.module';
+import { ChessModule } from '@games/chess/chess.module';
 import {
   ChessGameState,
   ChessGameStateSchema,
-} from './chess/schemas/chess-game-state.schema';
-import { GameFactoryService } from './services/game-factory/game-factory.service';
-import { ChessGamesStateRepository } from './repositories/chess-games-state-repository/chess-games-state-repository.service';
-import { ChessGamesStateService } from './services/chess-games-state/chess-games-state.service';
+} from '@games/chess/schemas/chess-game-state.schema';
+import { GameFactoryService } from '@games/services/game-factory/game-factory.service';
+import { ChessGamesStateRepository } from '@games/repositories/chess-games-state-repository/chess-games-state-repository.service';
+import { ChessGamesStateService } from '@games/services/chess-games-state/chess-games-state.service';
 
 @Module({
   imports: [

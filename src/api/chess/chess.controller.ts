@@ -1,7 +1,7 @@
 import { Controller, Get, Logger, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { ChessGamesStateService } from 'src/games/services/chess-games-state/chess-games-state.service';
-import IResponseData from '../classes/IResponseData';
+import { ChessGamesStateService } from '@games/services/chess-games-state/chess-games-state.service';
+import IResponseData from '@api/classes/IResponseData';
 
 @Controller('chess')
 export class ChessController {
