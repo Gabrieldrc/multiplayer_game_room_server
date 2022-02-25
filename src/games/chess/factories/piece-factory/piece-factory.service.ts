@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import EmptySpaceChess from '../../classes/pieces/empty-space';
-import Rook from '../../classes/pieces/rook';
-import Pawn from '../../classes/pieces/pawn';
-import King from '../../classes/pieces/king';
-import Queen from '../../classes/pieces/queen';
-import Knight from '../../classes/pieces/knight';
-import Bishop from '../../classes/pieces/bishop';
+import EmptySpaceChess from '@games/chess/classes/pieces/empty-space';
+import Rook from '@games/chess/classes/pieces/rook';
+import Pawn from '@games/chess/classes/pieces/pawn';
+import King from '@games/chess/classes/pieces/king';
+import Queen from '@games/chess/classes/pieces/queen';
+import Knight from '@games/chess/classes/pieces/knight';
+import Bishop from '@games/chess/classes/pieces/bishop';
 
 @Injectable()
 export class PieceFactoryService {

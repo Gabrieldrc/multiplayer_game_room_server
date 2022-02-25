@@ -8,12 +8,12 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { GameFactoryService } from '../games/services/game-factory/game-factory.service';
-import { RoomService } from '../utils/room/room.service';
-import IWSResponse from './classes/IWSResponse';
+import { GameFactoryService } from '@games/services/game-factory/game-factory.service';
+import { RoomService } from '@utils/room/room.service';
+import IWSResponse from '@events/classes/IWSResponse';
 import { Logger } from '@nestjs/common';
-import { ChessGamesStateService } from 'src/games/services/chess-games-state/chess-games-state.service';
-import ItDidNotMoveException from 'src/games/exceptions/ItDidNotMoveException';
+import { ChessGamesStateService } from '@games/services/chess-games-state/chess-games-state.service';
+import ItDidNotMoveException from '@games/exceptions/ItDidNotMoveException';
 
 @WebSocketGateway()
 export class ChessGateway

@@ -1,4 +1,4 @@
-import WSResponse from '../interfaces/WSResponse';
+import WSResponse from '@events/interfaces/WSResponse';
 
 export default class IWSResponse implements WSResponse {
   ok: boolean;

@@ -1,4 +1,4 @@
-import { Position2D } from 'src/interfaces/position2-d.interface';
+import { Position2D } from '@utils/interfaces/position2-d.interface';
 
 export interface PieceModel {
   name: string;

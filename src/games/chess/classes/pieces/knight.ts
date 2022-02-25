@@ -1,4 +1,4 @@
-import ChessPieceAbstract from '../chess-piece-abstract';
+import ChessPieceAbstract from '@games/chess/classes/chess-piece-abstract';
 
 export default class Knight extends ChessPieceAbstract {
   constructor(player: number, x: number, y: number) {

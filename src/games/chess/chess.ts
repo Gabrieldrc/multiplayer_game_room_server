@@ -1,5 +1,5 @@
-import { PieceFactoryService } from './factories/piece-factory/piece-factory.service';
-import ChessPieceAbstract from './classes/chess-piece-abstract';
+import { PieceFactoryService } from '@games/chess/factories/piece-factory/piece-factory.service';
+import ChessPieceAbstract from '@games/chess/classes/chess-piece-abstract';
 import { Logger } from '@nestjs/common';
 
 export default class Chess {

@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import Chess from 'src/games/chess/chess';
-import { PieceFactoryService } from 'src/games/chess/factories/piece-factory/piece-factory.service';
-import { PieceModel } from 'src/games/chess/interfaces/PieceModel';
-import NotFoundStateException from 'src/games/exceptions/NotFoundStateException';
-import { ChessGamesStateRepository } from 'src/games/repositories/chess-games-state-repository/chess-games-state-repository.service';
+import Chess from '@games/chess/chess';
+import { PieceFactoryService } from '@games/chess/factories/piece-factory/piece-factory.service';
+import { PieceModel } from '@games/chess/interfaces/PieceModel';
+import NotFoundStateException from '@games/exceptions/NotFoundStateException';
+import { ChessGamesStateRepository } from '@games/repositories/chess-games-state-repository/chess-games-state-repository.service';
 
 @Injectable()
 export class ChessGamesStateService {

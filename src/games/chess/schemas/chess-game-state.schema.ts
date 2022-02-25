@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { PieceModel } from 'src/games/chess/interfaces/PieceModel';
+import { PieceModel } from '@games/chess/interfaces/PieceModel';
 
 export type ChessGameStateDocument = ChessGameState & Document;
 

@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Document, Model } from 'mongoose';
-import { ChessGameState } from 'src/games/chess/schemas/chess-game-state.schema';
-import MongoServerError from 'src/games/exceptions/MongoServerError';
-import GameStateRepository from 'src/games/interfaces/GameStateRepository';
+import { ChessGameState } from '@games/chess/schemas/chess-game-state.schema';
+import MongoServerError from '@games/exceptions/MongoServerError';
+import GameStateRepository from '@games/interfaces/GameStateRepository';
 
 @Injectable()
 export class ChessGamesStateRepository implements GameStateRepository {

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { EventsModule } from './events/events.module';
-import { GamesModule } from './games/games.module';
-import { UtilsModule } from './utils/utils.module';
-import { ApiModule } from './api/api.module';
+import { EventsModule } from '@events/events.module';
+import { GamesModule } from '@games/games.module';
+import { UtilsModule } from '@utils/utils.module';
+import { ApiModule } from '@api/api.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 

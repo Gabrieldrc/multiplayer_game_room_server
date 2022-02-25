@@ -1,4 +1,4 @@
-import ResponseData from '../interfaces/ResponseData';
+import ResponseData from '@api/interfaces/ResponseData';
 
 export default class IResponseData implements ResponseData {
   entry = {};

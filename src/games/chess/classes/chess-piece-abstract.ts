@@ -1,5 +1,5 @@
-import { Position2D } from '../../../interfaces/position2-d.interface';
-import { PieceModel } from '../interfaces/PieceModel';
+import { Position2D } from '@utils/interfaces/position2-d.interface';
+import { PieceModel } from '@games/chess/interfaces/PieceModel';
 
 export default abstract class ChessPieceAbstract {
   private player: number;
