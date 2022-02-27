@@ -11,7 +11,6 @@ export class ChessController {
 
   @Get('state')
   async getState(@Query() query: any, @Res() res: Response) {
-
     const resData = new IResponseData();
     resData.setEntry(query);
     const { room } = query;
@@ -21,7 +20,7 @@ export class ChessController {
         resData.setStatus(200).setData(game.getBoardData());
       }
     } catch (error: any) {
-      this.logger.error(error.stack);
+      console.log(error);
       resData.setData(error).setStatus(404);
       return res.status(resData.getStatus()).json(resData).send();
     }

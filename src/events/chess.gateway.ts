@@ -1,4 +1,6 @@
 import {
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
@@ -14,8 +16,9 @@ import IWSResponse from '@events/classes/IWSResponse';
 import { Logger } from '@nestjs/common';
 import { ChessGamesStateService } from '@games/services/chess-games-state/chess-games-state.service';
 import ItDidNotMoveException from '@games/exceptions/ItDidNotMoveException';
+import { Position2D } from '@utils/interfaces/position2-d.interface';
 
-@WebSocketGateway()
+@WebSocketGateway({ namespace: '/game/chess/' })
 export class ChessGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -31,7 +34,7 @@ export class ChessGateway
   ) {}
 
   @SubscribeMessage('newGame')
-  async handleNewGame(client: Socket): Promise<WsResponse<any>> {
+  async handleNewGame(@ConnectedSocket() client: Socket) {
     const response = new IWSResponse();
     const roomName = '1';
 
@@ -45,6 +48,8 @@ export class ChessGateway
       client.join(roomName);
       this.gameStateService.setGameState(roomName, game);
     } catch (error) {
+      console.log('fallo algo');
+
       this.logger.error(error);
       response.setOk(false).setData({ error: error });
       return { event: 'error', data: response };
@@ -60,8 +65,12 @@ export class ChessGateway
   }
 
   @SubscribeMessage('play')
-  async handlePlay(client: Socket, data: any) /*: Promise<WsResponse<any>>*/ {
-    const { from, to } = data;
+  async handlePlay(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: Position2D[],
+  ) {
+    const [from, to] = data;
+
     const response = new IWSResponse();
 
     const room = this.roomService.getRoom(client.id);
@@ -83,14 +92,14 @@ export class ChessGateway
     }
 
     response.setOk(true).setData({ ...game.getBoardData() });
-    this.server.in(room).emit('gameStateUpdate', response);
+    this.server.to(room).emit('gameStateUpdate', response);
   }
 
   @SubscribeMessage('joinGame')
   async handleJoinGame(
-    client: Socket,
-    room: string,
-  ) /*: Promise<WsResponse<any>>*/ {
+    @ConnectedSocket() client: Socket,
+    @MessageBody() room: string,
+  ) {
     const response = new IWSResponse();
     const data = {};
 
