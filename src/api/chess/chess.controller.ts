@@ -20,7 +20,7 @@ export class ChessController {
         resData.setStatus(200).setData(game.getBoardData());
       }
     } catch (error: any) {
-      console.log(error);
+      this.logger.error(`${error.name}: ${error.message}`);
       resData.setData(error).setStatus(404);
       return res.status(resData.getStatus()).json(resData).send();
     }

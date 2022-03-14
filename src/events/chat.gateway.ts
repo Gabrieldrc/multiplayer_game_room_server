@@ -21,8 +21,6 @@ export class ChatGateway
 
   private logger: Logger = new Logger('AppGateway');
 
-  constructor() {}
-
   @SubscribeMessage('message')
   async handleMessage(
     // @ConnectedSocket() client: Socket,
@@ -47,10 +45,10 @@ export class ChatGateway
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`);
+    this.logger.log(`Client disconnected to ChatGateway: ${client.id}`);
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log(`Client connected: ${client.id}`);
+    this.logger.log(`Client connected to ChatGateway: ${client.id}`);
   }
 }

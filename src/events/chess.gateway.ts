@@ -50,7 +50,6 @@ export class ChessGateway
     } catch (error) {
       console.log('fallo algo');
 
-      this.logger.error(error);
       response.setOk(false).setData({ error: error });
       return { event: 'error', data: response };
     }
@@ -86,7 +85,7 @@ export class ChessGateway
 
       await this.gameStateService.setGameState(room, game);
     } catch (error) {
-      this.logger.error('Error', error.message);
+      this.logger.error('Error::chess->play', error.message);
       response.setOk(false).setData({ error: error });
       return { event: 'error', data: response };
     }
@@ -132,10 +131,10 @@ export class ChessGateway
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`);
+    this.logger.log(`Client disconnected to ChessGateway: ${client.id}`);
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log(`Client connected: ${client.id}`);
+    this.logger.log(`Client connected to ChessGateway: ${client.id}`);
   }
 }
