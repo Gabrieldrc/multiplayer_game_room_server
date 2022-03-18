@@ -1,5 +1,8 @@
 export default interface ResponseData {
   entry: any;
-  status: number;
-  response: any;
+  response: {
+    statusCode: number;
+    data?: any;
+    error?: any;
+  };
 }
