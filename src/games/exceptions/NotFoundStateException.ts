@@ -1,7 +1,7 @@
-import Exception from './Exception';
+import { NotFoundException } from '@nestjs/common';
 
-export default class NotFoundStateException extends Exception {
+export default class NotFoundStateException extends NotFoundException {
   constructor() {
-    super('NotFoundStateException', 'No state was found for this room');
+    super('No state was found for this room', 'NotFoundStateException');
   }
 }

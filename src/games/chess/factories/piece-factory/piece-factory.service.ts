@@ -9,12 +9,7 @@ import Bishop from '@games/chess/classes/pieces/bishop';
 
 @Injectable()
 export class PieceFactoryService {
-  getPiece(
-    name: string = '',
-    player: number = 0,
-    x: number = -1,
-    y: number = -1,
-  ) {
+  getPiece(name = '', player = 0, x = -1, y = -1) {
     name = name.toUpperCase();
     switch (name) {
       case 'ROOK':

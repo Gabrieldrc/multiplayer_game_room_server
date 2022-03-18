@@ -1,7 +1,18 @@
-import { Controller, Get, Logger, Query, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Logger,
+  Param,
+  Query,
+  Res,
+  UseFilters,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { ChessGamesStateService } from '@games/services/chess-games-state/chess-games-state.service';
-import IResponseData from '@api/classes/IResponseData';
+import ResponseTemplate from '@api/classes/ResponseTemplate';
+import { HttpExceptionFilter } from '@api/filters/HttpExceptionFilter';
 
 @Controller('chess')
 export class ChessController {
@@ -10,21 +21,15 @@ export class ChessController {
   constructor(private chessStateService: ChessGamesStateService) {}
 
   @Get('state')
-  async getState(@Query() query: any, @Res() res: Response) {
-
-    const resData = new IResponseData();
-    resData.setEntry(query);
-    const { room } = query;
-    try {
-      const game = await this.chessStateService.getGame(room);
-      if (game) {
-        resData.setStatus(200).setData(game.getBoardData());
-      }
-    } catch (error: any) {
-      this.logger.error(error.stack);
-      resData.setData(error).setStatus(404);
-      return res.status(resData.getStatus()).json(resData).send();
+  @HttpCode(HttpStatus.OK)
+  @UseFilters(new HttpExceptionFilter())
+  async getState(@Query('room') room: string) {
+    const response = new ResponseTemplate();
+    response.setEntry({ room });
+    const game = await this.chessStateService.getGame(room);
+    if (game) {
+      response.setData(game.getBoardData());
     }
-    res.status(200).json(resData).send();
+    return response.getResponseObj();
   }
 }
