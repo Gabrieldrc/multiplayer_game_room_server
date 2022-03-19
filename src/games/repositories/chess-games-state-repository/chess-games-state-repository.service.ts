@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Document, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { ChessGameState } from '@games/chess/schemas/chess-game-state.schema';
 import MongoServerError from '@games/exceptions/MongoServerError';
 import GameStateRepository from '@games/interfaces/GameStateRepository';
