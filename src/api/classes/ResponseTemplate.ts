@@ -1,5 +1,6 @@
-import ResponseData from '@api/interfaces/ResponseData';
 import { HttpStatus } from '@nestjs/common';
+
+import ResponseData from '@api/interfaces/ResponseData';
 
 export default class ResponseTemplate {
   private entry = {};

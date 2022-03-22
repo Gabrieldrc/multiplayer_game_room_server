@@ -1,6 +1,7 @@
+import { Logger } from '@nestjs/common';
+
 import { PieceFactoryService } from '@games/chess/factories/piece-factory/piece-factory.service';
 import ChessPieceAbstract from '@games/chess/classes/chess-piece-abstract';
-import { Logger } from '@nestjs/common';
 
 export default class Chess {
   private logger: Logger = new Logger();
