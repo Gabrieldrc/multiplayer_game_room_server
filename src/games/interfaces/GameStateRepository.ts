@@ -1,7 +1,8 @@
-import { ChessGameState } from '@games/chess/schemas/chess-game-state.schema';
+import ChessGameState from '@games/chess/interfaces/ChessGameState';
 
 export default interface GameStateRepository {
-  setGameState(stateObj: ChessGameState);
-  findGameState(room: string);
+  updateGameStateObject(stateObj: ChessGameState);
+  createGameStateObject(stateObj: ChessGameState);
+  findGameStateObject(room: string);
   deleteGameState(room: string);
 }

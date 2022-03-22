@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
-import config from './config';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 
 import { EventsModule } from '@events/events.module';
@@ -10,6 +8,7 @@ import { UtilsModule } from '@utils/utils.module';
 import { ApiModule } from '@api/api.module';
 import { DatabaseModule } from './database/database.module';
 import { enviroments } from 'src/enviroments';
+import config from './config';
 
 @Module({
   imports: [

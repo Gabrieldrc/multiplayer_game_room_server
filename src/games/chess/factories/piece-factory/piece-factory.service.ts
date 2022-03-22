@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import EmptySpaceChess from '@games/chess/classes/pieces/empty-space';
 import Rook from '@games/chess/classes/pieces/rook';
 import Pawn from '@games/chess/classes/pieces/pawn';

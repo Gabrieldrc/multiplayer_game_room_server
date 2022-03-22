@@ -4,12 +4,10 @@ import {
   HttpCode,
   HttpStatus,
   Logger,
-  Param,
   Query,
-  Res,
   UseFilters,
 } from '@nestjs/common';
-import { Response } from 'express';
+
 import { ChessGamesStateService } from '@games/services/chess-games-state/chess-games-state.service';
 import ResponseTemplate from '@api/classes/ResponseTemplate';
 import { HttpExceptionFilter } from '@api/filters/HttpExceptionFilter';

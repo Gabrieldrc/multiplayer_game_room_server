@@ -1,16 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+
 import { PieceModel } from '@games/chess/interfaces/PieceModel';
 
-export type ChessGameStateDocument = ChessGameState & Document;
+export type ChessGameStateDocument = ChessGameStateEntity & Document;
 
 @Schema()
-export class ChessGameState {
+export class ChessGameStateEntity {
   @Prop({ required: true })
   players: string[];
-
-  @Prop({ require: true, unique: true })
-  roomId: string;
 
   @Prop({ require: true })
   turn: number;
@@ -20,4 +18,4 @@ export class ChessGameState {
 }
 
 export const ChessGameStateSchema =
-  SchemaFactory.createForClass(ChessGameState);
+  SchemaFactory.createForClass(ChessGameStateEntity);

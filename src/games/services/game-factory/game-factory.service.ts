@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import Chess from '@games/chess/chess';
 import { PieceFactoryService } from '@games/chess/factories/piece-factory/piece-factory.service';
 

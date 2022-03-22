@@ -1,9 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
+
 import Chess from '@games/chess/chess';
 import { PieceFactoryService } from '@games/chess/factories/piece-factory/piece-factory.service';
 import { PieceModel } from '@games/chess/interfaces/PieceModel';
 import NotFoundStateException from '@games/exceptions/NotFoundStateException';
 import { ChessGamesStateRepository } from '@games/repositories/chess-games-state-repository/chess-games-state-repository.service';
+import ChessGameState from '@games/chess/interfaces/ChessGameState';
 
 @Injectable()
 export class ChessGamesStateService {
@@ -14,19 +16,25 @@ export class ChessGamesStateService {
     private pieceFactory: PieceFactoryService,
   ) {}
 
-  async setGameState(room: string, game: Chess) {
-    const state = await this.chessStateRepository.setGameState({
-      roomId: room,
-      ...game.getState(),
-    });
-    if (state) {
-      return true;
+  async createGameState(game: Chess) {
+    return await this.chessStateRepository.createGameStateObject(
+      game.getState(),
+    );
+  }
+
+  async updateGameState(gamestate: ChessGameState) {
+    const state = await this.chessStateRepository.updateGameStateObject(
+      gamestate,
+    );
+    if (!state) {
+      throw new NotFoundStateException();
     }
-    return false;
+
+    return state;
   }
 
   async getGame(room: string): Promise<Chess> {
-    const document = await this.chessStateRepository.findGameState(room);
+    const document = await this.chessStateRepository.findGameStateObject(room);
     if (!document) {
       throw new NotFoundStateException();
     }
@@ -34,7 +42,7 @@ export class ChessGamesStateService {
     return this.gameStateToGameObject(document);
   }
 
-  private gameStateToGameObject(gameState: any): Chess {
+  private gameStateToGameObject(gameState: ChessGameState) {
     const gameObject = new Chess(this.pieceFactory);
 
     gameObject.setBoard(this.boardStateToBoardObject(gameState.board));

@@ -7,16 +7,18 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { Logger } from '@nestjs/common';
+
 import { GameFactoryService } from '@games/services/game-factory/game-factory.service';
 import { RoomService } from '@utils/room/room.service';
 import IWSResponse from '@events/classes/IWSResponse';
-import { Logger } from '@nestjs/common';
 import { ChessGamesStateService } from '@games/services/chess-games-state/chess-games-state.service';
 import ItDidNotMoveException from '@games/exceptions/ItDidNotMoveException';
 import { Position2D } from '@utils/interfaces/position2-d.interface';
+import ChessGameState from '@games/chess/interfaces/ChessGameState';
+import Chess from '@games/chess/chess';
 
 @WebSocketGateway({ namespace: '/game/chess/' })
 export class ChessGateway
@@ -36,26 +38,25 @@ export class ChessGateway
   @SubscribeMessage('newGame')
   async handleNewGame(@ConnectedSocket() client: Socket) {
     const response = new IWSResponse();
-    const roomName = '1';
-
-    this.roomService.setRoom(client.id, roomName);
+    let gameState: ChessGameState;
 
     const game = this.gameFactory.getGame('chess');
     game.newGame();
     game.addPlayer(client.id);
 
     try {
-      client.join(roomName);
-      this.gameStateService.setGameState(roomName, game);
+      gameState = await this.gameStateService.createGameState(game);
+      this.roomService.setRoom(client.id, gameState.roomId);
+      client.join(gameState.roomId);
     } catch (error) {
-      console.log('fallo algo');
+      this.logger.error(error);
 
       response.setOk(false).setData({ error: error });
       return { event: 'error', data: response };
     }
 
     const data = {
-      room: roomName,
+      room: gameState.roomId,
       playerNumber: 1,
       playerId: client.id,
     };
@@ -74,7 +75,7 @@ export class ChessGateway
 
     const room = this.roomService.getRoom(client.id);
 
-    let game;
+    let game: Chess;
     try {
       game = await this.gameStateService.getGame(room);
 
@@ -83,7 +84,10 @@ export class ChessGateway
         throw new ItDidNotMoveException();
       }
 
-      await this.gameStateService.setGameState(room, game);
+      await this.gameStateService.updateGameState({
+        roomId: room,
+        ...game.getState(),
+      });
     } catch (error) {
       this.logger.error('Error::chess->play', error.message);
       response.setOk(false).setData({ error: error });
@@ -112,7 +116,10 @@ export class ChessGateway
       }
 
       client.join(room);
-      this.gameStateService.setGameState(room, game);
+      this.gameStateService.updateGameState({
+        roomId: room,
+        ...game.getState(),
+      });
     } catch (error) {
       this.logger.error(error);
       response.setOk(false).setData({ error: error });

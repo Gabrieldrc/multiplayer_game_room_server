@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+
 import { ChessModule } from '@games/chess/chess.module';
 import {
-  ChessGameState,
+  ChessGameStateEntity,
   ChessGameStateSchema,
 } from '@games/chess/schemas/chess-game-state.schema';
 import { GameFactoryService } from '@games/services/game-factory/game-factory.service';
@@ -13,7 +14,7 @@ import { ChessGamesStateService } from '@games/services/chess-games-state/chess-
   imports: [
     ChessModule,
     MongooseModule.forFeature([
-      { name: ChessGameState.name, schema: ChessGameStateSchema },
+      { name: ChessGameStateEntity.name, schema: ChessGameStateSchema },
     ]),
   ],
   providers: [

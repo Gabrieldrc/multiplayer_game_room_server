@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+
 import config from 'src/config';
 
 @Global()
@@ -15,6 +16,8 @@ import config from 'src/config';
           user,
           pass: password,
           dbName,
+          autoIndex: configService.enviroment !== 'prod',
+          autoCreate: configService.enviroment !== 'prod',
         };
       },
       inject: [config.KEY],
