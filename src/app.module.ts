@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 
-import { EventsModule } from '@events/events.module';
-import { GamesModule } from '@games/games.module';
-import { UtilsModule } from '@utils/utils.module';
-import { ApiModule } from '@api/api.module';
+import { enviroments } from '@config/enviroments';
+import config from '@config/config';
 import { DatabaseModule } from './database/database.module';
-import { enviroments } from 'src/enviroments';
-import config from './config';
+import { ChessModule } from '@chess/chess.module';
+import { ChatModule } from '@chat/chat.module';
+import { CommonModule } from '@common/common.module';
+import { RoomModule } from '@room/room.module';
 
 @Module({
   imports: [
@@ -24,13 +24,11 @@ import config from './config';
         MONGO_CONNECTION: Joi.string().required(),
       }),
     }),
-    EventsModule,
-    GamesModule,
-    UtilsModule,
-    ApiModule,
     DatabaseModule,
+    ChessModule,
+    ChatModule,
+    CommonModule,
+    RoomModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}
