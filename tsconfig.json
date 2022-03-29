@@ -18,10 +18,11 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@api/*": ["src/api/*"],
-      "@events/*": ["src/events/*"],
-      "@games/*": ["src/games/*"],
-      "@utils/*": ["src/utils/*"],
+      "@chat/*": ["src/chat/*"],
+      "@chess/*": ["src/chess/*"],
+      "@common/*": ["src/common/*"],
+      "@config/*": ["src/config/*"],
+      "@room/*": ["src/room/*"],
     }
   }
 }
