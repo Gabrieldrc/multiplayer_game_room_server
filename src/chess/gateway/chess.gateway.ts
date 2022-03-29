@@ -19,6 +19,7 @@ import Chess from '@chess/domain/class/chess';
 import { GameFactoryService } from '@common/service/game-factory.service';
 import IWSResponse from '@common/class/IWSResponse';
 import ChessGameState from '@chess/domain/dto/ChessGameState';
+import Room from '@room/domain/dto/room.dto';
 
 @WebSocketGateway({ namespace: '/game/chess/' })
 export class ChessGateway
@@ -38,16 +39,16 @@ export class ChessGateway
   @SubscribeMessage('newGame')
   async handleNewGame(@ConnectedSocket() client: Socket) {
     const response = new IWSResponse();
-    let gameState: ChessGameState;
+    let gameState: ChessGameState, room: Room;
 
     const game = this.gameFactory.getGame('chess');
     game.newGame();
     game.addPlayer(client.id);
 
     try {
-      gameState = await this.gameStateService.createGameState(game);
-      this.roomService.setRoom(client.id, gameState.roomId);
-      client.join(gameState.roomId);
+      room = await this.roomService.createRoom(client.id);
+      await this.gameStateService.createGameState(game, room.roomId);
+      client.join(room.roomId);
     } catch (error) {
       this.logger.error(error);
 
@@ -56,7 +57,7 @@ export class ChessGateway
     }
 
     const data = {
-      room: gameState.roomId,
+      room: room.roomId,
       playerNumber: 1,
       playerId: client.id,
     };
@@ -70,14 +71,14 @@ export class ChessGateway
     @MessageBody() data: Position2D[],
   ) {
     const [from, to] = data;
-
     const response = new IWSResponse();
+    let game: Chess, room: Room;
+    console.log(from, to);
 
-    const room = this.roomService.getRoom(client.id);
-
-    let game: Chess;
     try {
-      game = await this.gameStateService.getGame(room);
+      room = await this.roomService.getRoomByMemberId(client.id);
+
+      game = await this.gameStateService.getGame(room.roomId);
 
       const itMoved = game.move(from.i, from.j, to.i, to.j);
       if (!itMoved) {
@@ -85,7 +86,7 @@ export class ChessGateway
       }
 
       await this.gameStateService.updateGameState({
-        roomId: room,
+        roomId: room.roomId,
         ...game.getState(),
       });
     } catch (error) {
@@ -95,29 +96,31 @@ export class ChessGateway
     }
 
     response.setOk(true).setData({ ...game.getBoardData() });
-    this.server.to(room).emit('gameStateUpdate', response);
+
+    this.server.in(room.roomId).emit('gameStateUpdate', response);
   }
 
   @SubscribeMessage('joinGame')
   async handleJoinGame(
     @ConnectedSocket() client: Socket,
-    @MessageBody() room: string,
+    @MessageBody() roomId: string,
   ) {
     const response = new IWSResponse();
     const data = {};
-
-    this.roomService.setRoom(client.id, room);
+    let room: Room, game: Chess;
 
     try {
-      const game = await this.gameStateService.getGame(room);
+      room = await this.roomService.addOneMemberToRoom(client.id, roomId);
+
+      game = await this.gameStateService.getGame(room.roomId);
 
       if (game.addPlayer(client.id)) {
         data['playerNumber'] = game.getPlayers().indexOf(client.id) + 1;
       }
 
-      client.join(room);
+      await client.join(room.roomId);
       this.gameStateService.updateGameState({
-        roomId: room,
+        roomId: room.roomId,
         ...game.getState(),
       });
     } catch (error) {
@@ -126,7 +129,7 @@ export class ChessGateway
       return { event: 'error', data: response };
     }
 
-    data['room'] = room;
+    data['room'] = room.roomId;
     data['playerId'] = client.id;
 
     response.setOk(true).setData(data);

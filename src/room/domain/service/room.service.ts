@@ -1,5 +1,7 @@
-import { RoomRepository } from 'src/room/persistence/repository/room-repository.service';
+import { RoomRepository } from '@room/persistence/repository/room-repository.service';
 import { Injectable } from '@nestjs/common';
+import Room from '../dto/room.dto';
+import NotFoundRoomException from '../exception/NotFoundRoomException';
 
 @Injectable()
 export class RoomService {
@@ -9,22 +11,26 @@ export class RoomService {
     this.rooms = new Map<string, string>();
   }
 
-  getRooms(): Map<string, string> {
-    return this.rooms;
+  async createRoom(member: string): Promise<Room> {
+    return await this.roomRepository.createRoom({ members: [member] });
+  }
+  async getRoomByMemberId(memberId: string): Promise<Room> {
+    const room = await this.roomRepository.findRoomByMemberId(memberId);
+    if (!room) throw new NotFoundRoomException();
+
+    return room;
   }
 
-  setRooms(value: Map<string, string>) {
-    this.rooms = value;
+  async getRoom(roomId: string): Promise<Room> {
+    const room = await this.roomRepository.findRoom(roomId);
+    if (!room) throw new NotFoundRoomException();
+
+    return room;
   }
 
-  setRoom(socketId: string, room: string) {
-    this.getRooms().set(socketId, room);
-  }
-
-  getRoom(socketId: string): string {
-    if (this.getRooms().has(socketId)) {
-      return this.getRooms().get(socketId) + '';
-    }
-    return '';
+  async addOneMemberToRoom(member: string, roomId: string): Promise<Room> {
+    const room = await this.getRoom(roomId);
+    room.members = room.members.concat([member]);
+    return await this.roomRepository.updateRoom(room);
   }
 }

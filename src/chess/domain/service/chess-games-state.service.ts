@@ -16,10 +16,11 @@ export class ChessGamesStateService {
     private pieceFactory: PieceFactoryService,
   ) {}
 
-  async createGameState(game: Chess) {
-    return await this.chessStateRepository.createGameStateObject(
-      game.getState(),
-    );
+  async createGameState(game: Chess, room: string) {
+    return await this.chessStateRepository.createGameStateObject({
+      ...game.getState(),
+      roomId: room,
+    });
   }
 
   async updateGameState(gamestate: ChessGameState) {
@@ -34,12 +35,13 @@ export class ChessGamesStateService {
   }
 
   async getGame(room: string): Promise<Chess> {
-    const document = await this.chessStateRepository.findGameStateObject(room);
-    if (!document) {
+    const chessState =
+      await this.chessStateRepository.findGameStateObjectByRoom(room);
+    if (!chessState) {
       throw new NotFoundStateException();
     }
 
-    return this.gameStateToGameObject(document);
+    return this.gameStateToGameObject(chessState);
   }
 
   private gameStateToGameObject(gameState: ChessGameState) {
@@ -72,6 +74,6 @@ export class ChessGamesStateService {
   }
 
   deleteGameState(room: string) {
-    return this.chessStateRepository.deleteGameState(room);
+    return this.chessStateRepository.deleteGameStateByRoom(room);
   }
 }

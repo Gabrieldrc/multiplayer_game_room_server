@@ -15,6 +15,13 @@ export class ChessGameStateEntity {
 
   @Prop({ require: true })
   board: PieceModel[][];
+
+  @Prop({ required: true })
+  roomId: string;
+
+  //14400s == 4h
+  @Prop({ type: Date, expires: '14400s', default: () => Date.now() })
+  createdAt: Date;
 }
 
 export const ChessGameStateSchema =

@@ -21,7 +21,7 @@ export class ChessGamesStateRepository {
   async updateGameStateObject(stateObj: ChessGameState) {
     let document = null;
 
-    document = await this.findGameState(stateObj.roomId);
+    document = await this.findGameStateByRoomId(stateObj.roomId);
 
     if (!document) return document;
 
@@ -39,8 +39,8 @@ export class ChessGamesStateRepository {
 
     return this.documentToObject(document);
   }
-  async findGameStateObject(room: string) {
-    const document = await this.findGameState(room);
+  async findGameStateObjectByRoom(room: string) {
+    const document = await this.findGameStateByRoomId(room);
     if (!document) {
       return null;
     }
@@ -48,15 +48,15 @@ export class ChessGamesStateRepository {
     return this.documentToObject(document);
   }
 
-  async deleteGameState(room: string) {
+  async deleteGameStateByRoom(room: string) {
     // const model = await this.findGameState(room);
     // model.delete();
   }
 
-  private async findGameState(id: string) {
+  private async findGameStateByRoomId(id: string) {
     let result = null;
     try {
-      result = await this.chessGameStateModel.findById(id);
+      result = await this.chessGameStateModel.findOne({ roomId: id });
     } catch (error) {
       throw new MongoServerError(error.message);
     }
@@ -71,6 +71,7 @@ export class ChessGamesStateRepository {
     document.board = stateObj.board;
     document.turn = stateObj.turn;
     document.players = stateObj.players;
+    document.roomId = stateObj.roomId;
     try {
       document = await document.save();
     } catch (error) {
@@ -85,7 +86,7 @@ export class ChessGamesStateRepository {
       board: document.board,
       players: document.players,
       turn: document.turn,
-      roomId: document._id,
+      roomId: document.roomId,
     };
   }
 
@@ -94,6 +95,7 @@ export class ChessGamesStateRepository {
       board: state.board,
       players: state.players,
       turn: state.turn,
+      roomId: state.roomId,
     });
   }
 }
