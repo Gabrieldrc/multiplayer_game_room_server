@@ -11,8 +11,8 @@ export class RoomService {
     this.rooms = new Map<string, string>();
   }
 
-  async createRoom(member: string): Promise<Room> {
-    return await this.roomRepository.createRoom({ members: [member] });
+  async createEmptyRoom(): Promise<Room> {
+    return await this.roomRepository.createRoom({ members: [] });
   }
   async getRoomByMemberId(memberId: string): Promise<Room> {
     const room = await this.roomRepository.findRoomByMemberId(memberId);

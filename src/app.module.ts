@@ -22,6 +22,8 @@ import { RoomModule } from '@room/room.module';
         MONGO_INITDB_ROOT_PASSWORD: Joi.string().required(),
         MONGO_HOST: Joi.string().required(),
         MONGO_CONNECTION: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRETIME: Joi.string().required(),
       }),
     }),
     DatabaseModule,

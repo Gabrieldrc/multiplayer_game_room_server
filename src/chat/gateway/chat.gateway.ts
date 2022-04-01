@@ -21,10 +21,7 @@ export class ChatGateway
   private logger: Logger = new Logger('AppGateway');
 
   @SubscribeMessage('message')
-  async handleMessage(
-    // @ConnectedSocket() client: Socket,
-    @MessageBody() data: any,
-  ) {
+  async handleMessage(@MessageBody() data: any) {
     const [room, message] = data;
 
     this.server.to(room).emit('message', message);
