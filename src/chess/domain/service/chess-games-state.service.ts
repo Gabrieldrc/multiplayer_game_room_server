@@ -6,6 +6,7 @@ import { ChessGamesStateRepository } from '@chess/persistence/repository/chess-g
 import ChessGameState from '../dto/ChessGameState';
 import NotFoundStateException from '../exception/NotFoundStateException';
 import { PieceModel } from '../interface/PieceModel';
+import Room from '@room/domain/dto/room.dto';
 
 @Injectable()
 export class ChessGamesStateService {
@@ -16,10 +17,10 @@ export class ChessGamesStateService {
     private pieceFactory: PieceFactoryService,
   ) {}
 
-  async createGameState(game: Chess, room: string) {
+  async createGameState(game: Chess, room: Room) {
     return await this.chessStateRepository.createGameStateObject({
       ...game.getState(),
-      roomId: room,
+      roomId: room.roomId,
     });
   }
 

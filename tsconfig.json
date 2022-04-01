@@ -23,6 +23,7 @@
       "@common/*": ["src/common/*"],
       "@config/*": ["src/config/*"],
       "@room/*": ["src/room/*"],
+      "@auth/*": ["src/auth/*"],
     }
   }
 }

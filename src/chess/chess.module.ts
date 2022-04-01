@@ -1,8 +1,9 @@
-import { CommonModule } from '@common/common.module';
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { RoomModule } from '@room/room.module';
 
+import { AuthModule } from '@auth/auth.module';
+import { CommonModule } from '@common/common.module';
+import { RoomModule } from '@room/room.module';
 import { ChessController } from './api/chess.controller';
 import { ChessGamesStateService } from './domain/service/chess-games-state.service';
 import { PieceFactoryService } from './domain/service/piece-factory.service';
@@ -27,6 +28,7 @@ import {
     MongooseModule.forFeature([
       { name: ChessGameStateEntity.name, schema: ChessGameStateSchema },
     ]),
+    AuthModule,
   ],
   exports: [PieceFactoryService],
 })

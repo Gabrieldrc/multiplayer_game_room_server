@@ -10,5 +10,9 @@ export default registerAs('config', () => {
       host: process.env.MONGO_HOST,
       connection: process.env.MONGO_CONNECTION,
     },
+    jwt: {
+      secret: process.env.JWT_SECRET,
+      expire_time: process.env.JWT_EXPIRETIME,
+    },
   };
 });
