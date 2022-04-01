@@ -22,7 +22,8 @@
 - Primer lanzamiento a produccion
 
 
-[Unreleased]: https://github.com/Gabrieldrc/multiplayer_game_room_server/compare/1.1.1...HEAD
+[Unreleased]: https://github.com/Gabrieldrc/multiplayer_game_room_server/compare/1.2.1...HEAD
+[v1.2.1]: https://github.com/Gabrieldrc/multiplayer_game_room_server/compare/1.1.1...1.2.1
 [v1.1.1]: https://github.com/Gabrieldrc/multiplayer_game_room_server/compare/1.0.1...1.1.1
 [v1.0.1]: https://github.com/Gabrieldrc/multiplayer_game_room_server/compare/1.0.0...1.0.1
 [v1.0.0]: https://github.com/Gabrieldrc/multiplayer_game_room_server/tags/1.0.0
